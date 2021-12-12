@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    image: nadialayra/kasir-online-app:latest
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - cache
+    networks:
+      - app-network
+
+  web_server:
+    image: nadialayra/kasir-online-server:latest
+    container_name: web_server
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8010:80"
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+  cache:
+    image: redis:alpine
+    container_name: cache
+    restart: unless-stopped
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
